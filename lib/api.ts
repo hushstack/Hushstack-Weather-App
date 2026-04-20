@@ -125,7 +125,7 @@ export async function geocodeCity(
   const url = new URL(`${GEO_URL}/direct`);
   url.searchParams.append("q", city);
   url.searchParams.append("appid", apiKey);
-  url.searchParams.append("limit", "5");
+  url.searchParams.append("limit", "10");
 
   const response = await fetch(url.toString(), {
     next: { revalidate: 86400 }, // Cache for 24 hours (geocoding rarely changes)
