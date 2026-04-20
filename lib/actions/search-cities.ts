@@ -10,7 +10,7 @@ export async function searchCities(query: string): Promise<GeocodingResult[]> {
 
   try {
     const results = await geocodeCity(query);
-    return results.slice(0, 5); // Limit to 5 suggestions
+    return results.slice(0, 10); // Limit to 10 suggestions for more options
   } catch {
     return [];
   }

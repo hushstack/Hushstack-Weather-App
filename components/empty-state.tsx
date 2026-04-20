@@ -3,17 +3,30 @@
 import { CloudSun, MapPin, Sparkles, Compass } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import GB from "country-flag-icons/react/3x2/GB";
+import US from "country-flag-icons/react/3x2/US";
+import JP from "country-flag-icons/react/3x2/JP";
+import FR from "country-flag-icons/react/3x2/FR";
+import SG from "country-flag-icons/react/3x2/SG";
+import AU from "country-flag-icons/react/3x2/AU";
+import AE from "country-flag-icons/react/3x2/AE";
+import KH from "country-flag-icons/react/3x2/KH";
 
 const POPULAR_CITIES = [
-  { name: "London", country: "UK", lat: 51.5074, lon: -0.1278, emoji: "🇬🇧" },
-  { name: "New York", country: "US", lat: 40.7128, lon: -74.006, emoji: "🇺🇸" },
-  { name: "Tokyo", country: "JP", lat: 35.6762, lon: 139.6503, emoji: "🇯🇵" },
-  { name: "Paris", country: "FR", lat: 48.8566, lon: 2.3522, emoji: "🇫🇷" },
-  { name: "Singapore", country: "SG", lat: 1.3521, lon: 103.8198, emoji: "🇸🇬" },
-  { name: "Sydney", country: "AU", lat: -33.8688, lon: 151.2093, emoji: "🇦🇺" },
-  { name: "Dubai", country: "AE", lat: 25.2048, lon: 55.2708, emoji: "🇦🇪" },
-  { name: "Phnom Penh", country: "KH", lat: 11.5564, lon: 104.9282, emoji: "🇰🇭" },
+  { name: "London", country: "GB", lat: 51.5074, lon: -0.1278 },
+  { name: "New York", country: "US", lat: 40.7128, lon: -74.006 },
+  { name: "Tokyo", country: "JP", lat: 35.6762, lon: 139.6503 },
+  { name: "Paris", country: "FR", lat: 48.8566, lon: 2.3522 },
+  { name: "Singapore", country: "SG", lat: 1.3521, lon: 103.8198 },
+  { name: "Sydney", country: "AU", lat: -33.8688, lon: 151.2093 },
+  { name: "Dubai", country: "AE", lat: 25.2048, lon: 55.2708 },
+  { name: "Phnom Penh", country: "KH", lat: 11.5564, lon: 104.9282 },
 ];
+
+// Map country codes to flag components
+const FlagComponents: Record<string, React.ComponentType<{ className?: string }>> = {
+  GB, US, JP, FR, SG, AU, AE, KH,
+};
 
 // Floating particles component
 function FloatingParticles() {
@@ -143,18 +156,21 @@ export function EmptyState({ className }: EmptyStateProps) {
               whileTap={{ scale: 0.98 }}
             >
               <Link
-                href={`/?city=${encodeURIComponent(city.name)}`}
-                className="glass-card group flex items-center gap-3 rounded-2xl p-4 transition-all duration-300 hover:border-violet-500/40 hover:shadow-[0_8px_30px_rgba(139,92,246,0.2)] relative overflow-hidden"
+                href={`/weather/coords?lat=${city.lat}&lon=${city.lon}&name=${encodeURIComponent(city.name)}`}
+                className="glass-card group flex items-center gap-3 rounded-2xl p-4 transition-all duration-300 hover:border-violet-500/40 hover:shadow-[0_8px_30px_rgba(139,92,246,0.2)] relative overflow-hidden cursor-pointer"
               >
                 {/* Hover gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-violet-500/0 via-violet-500/5 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                 <motion.div
-                  className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/20 border border-white/10 group-hover:border-violet-400/30 transition-colors"
+                  className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 group-hover:border-violet-400/30 transition-colors overflow-hidden"
                   whileHover={{ rotate: [0, -10, 10, 0] }}
                   transition={{ duration: 0.5 }}
                 >
-                  <span className="text-lg">{city.emoji}</span>
+                  {(() => {
+                    const FlagComponent = FlagComponents[city.country];
+                    return FlagComponent ? <FlagComponent className="h-6 w-6 rounded-sm" /> : <span className="text-lg">🌍</span>;
+                  })()}
                 </motion.div>
 
                 <div className="min-w-0 text-left relative">
